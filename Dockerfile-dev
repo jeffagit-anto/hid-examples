@@ -1,0 +1,25 @@
+# image build example: docker -D build  --tag docker-yst:$GHC_VERSION .
+# image run example:   docker run --rm docker-yst:$GHC_VERSION
+# TODO add some ghcid use case
+
+ARG  GHC_VERSION=8.8.4
+ARG  REPO=hid-examples
+
+FROM antojf/$REPO:latest
+
+RUN ulimit -n 8192
+
+# recall ARG <ENV_VAR-NAME> without a value permits to use it inside the build stages
+ARG GHC_VERSION
+ENV GHC_VERSION=$GHC_VERSION
+
+ARG REPO
+ENV REPO=$REPO
+
+COPY ./ghcid-stack.yaml $WORKDIR
+RUN stack --resolver ghc-$GHC_VERSION --no-terminal install ghcid --stack-yaml ghcid-stack.yaml
+
+COPY ./hlint-stack.yaml $WORKDIR
+RUN stack --resolver ghc-$GHC_VERSION --no-terminal install hlint --stack-yaml hlint-stack.yaml
+
+CMD ["stack", "exec", "ghcid"]
