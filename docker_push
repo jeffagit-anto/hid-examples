@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "$DOCKER_TOKEN" | docker login -u "antojf" --password-stdin
+docker push antojf/$1:latest
