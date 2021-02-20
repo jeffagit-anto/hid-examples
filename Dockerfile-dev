@@ -22,4 +22,5 @@ RUN stack --resolver ghc-$GHC_VERSION --no-terminal install ghcid --stack-yaml g
 COPY ./hlint-stack.yaml $WORKDIR
 RUN stack --resolver ghc-$GHC_VERSION --no-terminal install hlint --stack-yaml hlint-stack.yaml
 
-CMD ["stack", "exec", "ghcid"]
+ENTRYPOINT ["stack", "exec", "ghcid"]
+CMD        ["--outputfile="ide-input.log"]
